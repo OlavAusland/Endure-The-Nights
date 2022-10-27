@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcb847ebba8d4b9898507ee6705550b6, type: 3}
+  m_Name: 7.62
+  m_EditorClassIdentifier: 
+  damage: 2
+  sprite: {fileID: 21300000, guid: 4c244681421077d4fbe7087e88a22094, type: 3}
+  magnitude: 10
+  prefab: {fileID: 5384805227397374312, guid: 66dbb77ae99142142821565f1a161624, type: 3}
