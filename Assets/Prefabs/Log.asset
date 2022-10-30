@@ -17,7 +17,7 @@ MonoBehaviour:
   uiRotation: 0
   size:
     width: 2
-    height: 2
+    height: 3
   name: Log
   sprite: {fileID: 21300000, guid: 3ddc569745f3c9b4cbaf9faa390a21b5, type: 3}
   maxStackSize: 32

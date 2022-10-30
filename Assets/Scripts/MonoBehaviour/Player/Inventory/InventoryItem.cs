@@ -37,6 +37,7 @@ public class InventoryItem : MonoBehaviour
         if(item.IsStackable){count.enabled = true;}
         
         rt.sizeDelta = new Vector2(item.size.width, item.size.height) * 25; //change to dynamically fit inventory size
+        count.rectTransform.sizeDelta = new Vector2(item.size.width, item.size.height) * 25;
         image.sprite = item.sprite;
         if(!IsVertical())
             image.rectTransform.eulerAngles = new Vector3(0, 0, item.uiRotation);
@@ -69,8 +70,10 @@ public class InventoryItem : MonoBehaviour
     public void Rotate90()
     {
         rt.Rotate(0, 0, 90);
+        
         (item.size.width, item.size.height) = (item.size.height, item.size.width);
-        count.GetComponent<RectTransform>().Rotate(0, 0 , -90);
+        count.rectTransform.Rotate(0, 0 , -90);
+        count.rectTransform.sizeDelta = new Vector2(item.size.width, item.size.height) * 25;
     }
     
 
