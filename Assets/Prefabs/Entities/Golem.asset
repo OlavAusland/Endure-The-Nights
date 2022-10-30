@@ -9,10 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fcb847ebba8d4b9898507ee6705550b6, type: 3}
-  m_Name: 7.62
+  m_Script: {fileID: 11500000, guid: 387656559dda4c10b38b91430ac86d95, type: 3}
+  m_Name: Golem
   m_EditorClassIdentifier: 
-  damage: 3
-  sprite: {fileID: 21300000, guid: 4c244681421077d4fbe7087e88a22094, type: 3}
-  magnitude: 10
-  prefab: {fileID: 5384805227397374312, guid: 66dbb77ae99142142821565f1a161624, type: 3}
+  health: 100
+  speed: 0.5
+  velocity: {x: -7.39771, y: 6.728587}
+  rb2D: {fileID: 0}
+  sr: {fileID: 0}
+  hitEffect: {fileID: 8636375316256712710, guid: f7f5cc38988578a43a6110a359fff458, type: 3}

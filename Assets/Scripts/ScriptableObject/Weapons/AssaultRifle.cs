@@ -16,6 +16,7 @@ public class AssaultRifle : Weapon
         
         GameObject obj = Instantiate(projectile.prefab, 
             caller.weaponTransform.position + (Vector3)(dir * offset), Quaternion.identity);
+        obj.GetComponent<ProjectileManager>().projectile = projectile;
         Rigidbody2D rb2D = obj.GetComponent<Rigidbody2D>();
         float rotation = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         obj.transform.rotation = Quaternion.AngleAxis(rotation, Vector3.forward);

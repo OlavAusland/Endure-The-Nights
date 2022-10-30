@@ -22,8 +22,10 @@ public class EntityManager : MonoBehaviour
         set
         {
             Utilities.Health.TakeDamage(transform, Health - value);
-            entity.OnHit(transform);
-             _health = value;
+            entity.OnHit(transform); 
+            _health = value; 
+            Debug.Log($"{Health}, {_health}, {value}");
+            if(_health <= 0){entity.OnDelete(transform);}
         }
     }
 
