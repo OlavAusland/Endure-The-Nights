@@ -96,7 +96,14 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
     private void Update()
     {
         mouse = Input.mousePosition;
-        if (selectedItem) { MoveItem(); }
+        if (selectedItem)
+        {
+            MoveItem();
+            if (Input.GetKeyDown(KeyCode.R))
+                selectedItem.Rotate90();
+            else if (Input.GetKey(KeyCode.X))
+                Debug.Log(CheckSpace(1, 1));
+        }
         if(Input.GetKeyDown(KeyCode.C))
             foreach (InventorySlot slot in slots)
                 slot.canPlace = true;
@@ -145,13 +152,7 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
         {
             hovering.Where(x => x.canPlace).
                 ToList().ForEach(x => { x.isHovering = false;x.UpdateColor();});
-            return;
         }
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            selectedItem.Rotate90();
-        }else if (Input.GetKey(KeyCode.X))
-            Debug.Log(CheckSpace(1, 1));
     }
 
 
@@ -192,9 +193,11 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
             return;
         if (eventData.pointerEnter == null)
         {
+            items.Remove(selectedItem);
             SpawnItem(selectedItem);
             Destroy(selectedItem.transform.gameObject);
             selectedItem = null;
+            return;
         }
             
 
@@ -255,7 +258,7 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
     }
 
     //FUNCTION to check if there is space for an item given (width and height) as parameters on a grid represented by a 1d array with dimentions represented by (dimentions.x, dimentions.y), return first index of the grid where the item can be placed
-    public (int, List<InventorySlot>, bool) CheckSpace(int width, int height)
+    private (int, List<InventorySlot>, bool) CheckSpace(int width, int height)
     {
         bool isVertical = false;
         // CHECK FOR BOTH VERTICAL AND HORIZONTAL LAYOUT
@@ -293,6 +296,8 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 
     public void AddItem(Item item)
     {
+        if(AddStackable(item)){return;}
+        
         var (position, coveredSlots, vertical) = CheckSpace(item.size.width, item.size.height);
 
         if (position == -1)
@@ -320,6 +325,32 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
         obj.transform.position = new Vector3(
             slots[position].transform.position.x + (obj.item.size.width / 2.0f * GRID_SIZE) - (GRID_SIZE / 2.0f),
             slots[position].transform.position.y - (obj.item.size.height / 2.0f * GRID_SIZE) + (GRID_SIZE / 2.0f));
+
+        if (!obj.item.IsStackable){return;}
+
+        obj.count.text = (obj.item as StackableItem).amount.ToString();
+    }
+
+    private bool AddStackable(Item item)
+    {
+        if(!item.IsStackable){return false;}
+        
+        if(items.Any(x => x.item.name == item.name && item.IsStackable))
+        {
+            foreach (InventoryItem inventoryItem in items.FindAll(x => x.item.name == item.name))
+            {
+                StackableItem _item = inventoryItem.item as StackableItem;
+                
+                if(_item.amount + 1 > _item.maxStackSize){continue;}
+                
+                _item.amount += (item as StackableItem != null) ? ((StackableItem)item).amount : 0;
+                inventoryItem.count.text = _item.amount.ToString();
+                return true;
+            }
+            return false;
+        }
+
+        return false;
     }
 
     private void SpawnItem(InventoryItem item)
@@ -332,10 +363,9 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
         obj.item = Instantiate(item.item);
     }
     
-
+    
     public void OnDrawGizmos()
     {
-        
         foreach (InventorySlot slot in slots)
         {
             if(slot.canPlace)

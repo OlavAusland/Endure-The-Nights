@@ -14,6 +14,6 @@ public class Golem : Enemy
             else if(velocity.x < 0 && !sr.flipX){sr.flipX = true;}
         }
         else velocity = Vector2.zero;
-        rb2D.velocity = velocity;
+        rb2D.MovePosition(caller.position + (Vector3)velocity);
     }
 }

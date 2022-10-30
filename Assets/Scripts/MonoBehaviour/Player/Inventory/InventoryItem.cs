@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UI;
@@ -29,10 +30,13 @@ public class InventoryItem : MonoBehaviour
     public Item item;
 
     public List<InventorySlot> slots;
+    public TMP_Text count;
 
     private void Start()
     {
-        rt.sizeDelta = new Vector2(item.size.width, item.size.height) * 25;
+        if(item.IsStackable){count.enabled = true;}
+        
+        rt.sizeDelta = new Vector2(item.size.width, item.size.height) * 25; //change to dynamically fit inventory size
         image.sprite = item.sprite;
         if(!IsVertical())
             image.rectTransform.eulerAngles = new Vector3(0, 0, item.uiRotation);
@@ -66,6 +70,7 @@ public class InventoryItem : MonoBehaviour
     {
         rt.Rotate(0, 0, 90);
         (item.size.width, item.size.height) = (item.size.height, item.size.width);
+        count.GetComponent<RectTransform>().Rotate(0, 0 , -90);
     }
     
 

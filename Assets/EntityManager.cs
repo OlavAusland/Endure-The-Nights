@@ -13,6 +13,7 @@ public enum EntityType
 
 public class EntityManager : MonoBehaviour
 {
+    public static EntityManager Instance;
     public Entity entity;
     public EntityType type;
     private int _health = 100;
