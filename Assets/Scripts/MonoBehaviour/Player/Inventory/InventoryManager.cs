@@ -72,6 +72,7 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
     public PlayerCombat pc;
     public PlayerManager pm;
     public PlayerEquipment pe;
+    public CraftingManager cm;
     private GameObject itemPrefab {get{return Resources.Load<GameObject>("Inventory/Item");}}
     
     [Header("Equipped Items")] 
@@ -193,9 +194,7 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
             return;
         if (eventData.pointerEnter == null)
         {
-            items.Remove(selectedItem);
-            SpawnItem(selectedItem);
-            Destroy(selectedItem.transform.gameObject);
+            DropItem(selectedItem);
             selectedItem = null;
             return;
         }
@@ -284,8 +283,7 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
                 }
             
                 if(hovering.Count != (horizontal * vertical) || hovering.Any(x => !x.canPlace)){continue;}
-            
-                hovering.ForEach(x => { Debug.Log(x.canPlace);x.UpdateColor(Color.cyan);});
+                
                 return (slots.IndexOf(hovering[0]), hovering, isVertical);
             }
 
@@ -326,6 +324,7 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
             slots[position].transform.position.x + (obj.item.size.width / 2.0f * GRID_SIZE) - (GRID_SIZE / 2.0f),
             slots[position].transform.position.y - (obj.item.size.height / 2.0f * GRID_SIZE) + (GRID_SIZE / 2.0f));
 
+        cm.UpdateText();
         if (!obj.item.IsStackable){return;}
 
         obj.count.text = (obj.item as StackableItem).amount.ToString();
@@ -345,6 +344,7 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
                 
                 _item.amount += (item as StackableItem != null) ? ((StackableItem)item).amount : 0;
                 inventoryItem.count.text = _item.amount.ToString();
+                cm.UpdateText();
                 return true;
             }
             return false;
@@ -353,6 +353,28 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
         return false;
     }
 
+    public int GetItemQuantity(Item item)
+    {
+        var count = 0;
+        foreach (var invItem in items.Where(x => x.item.name == item.name).ToList())
+        {
+            if(!invItem.item.IsStackable){count++; continue; }
+            
+            var stackableItem = invItem.item as StackableItem;
+
+            count += stackableItem.amount;
+        }
+
+        return count;
+    }
+
+    public void DropItem(InventoryItem item)
+    {
+        items.Remove(item);
+        SpawnItem(item);
+        Destroy(item.transform.gameObject);
+    }
+    
     private void SpawnItem(InventoryItem item)
     {
         ItemInformation obj = Instantiate(Resources.Load<GameObject>("UI/Item"), 
@@ -361,6 +383,7 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
             item.Rotate90();
         
         obj.item = Instantiate(item.item);
+        cm.UpdateText();
     }
     
     

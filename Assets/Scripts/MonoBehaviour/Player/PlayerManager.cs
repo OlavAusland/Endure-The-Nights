@@ -37,7 +37,6 @@ public class PlayerManager : MonoBehaviour
         {
             if (Vector2.Distance(hit.transform.position, mouse) < pickupRange)
             {
-                print(hit.transform.name);
                 im.AddItem(hit.transform.GetComponent<ItemInformation>().item);
                 Destroy(hit.transform.gameObject);
             }
