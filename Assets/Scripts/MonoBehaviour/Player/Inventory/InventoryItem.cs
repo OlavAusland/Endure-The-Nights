@@ -73,7 +73,6 @@ public class InventoryItem : MonoBehaviour
         
         (item.size.width, item.size.height) = (item.size.height, item.size.width);
         rt.sizeDelta = new Vector2(item.size.width, item.size.height) * 25;
-        count.rectTransform.Rotate(0, 0 , -90);
         count.rectTransform.sizeDelta = new Vector2(item.size.width, item.size.height) * 25;
     }
     
